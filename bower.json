@@ -1,0 +1,24 @@
+{
+  "name": "WorldCupParser",
+  "version": "0.0.1",
+  "homepage": "https://github.com/HackBulgaria/Frontend-JavaScript-1",
+  "authors": [
+    "TrifonStatkov", "TsvetanRusenov"
+  ],
+  "description": "Showing all the World Cup 2014 games from today!",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "handlebars": "~2.0",
+    "bootstrap": "latest"
+  }
+}
