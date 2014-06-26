@@ -9,6 +9,9 @@
 		<h1>World Cup 2014 matches today</h1>
 
 
+		<div id="info">
+		</div>
+
 		<div id="matchesTodayContainer" class="container">
 		</div>
 
@@ -16,12 +19,7 @@
 		    Hover me
 		</span>
 		<div style="display:none;">
-		    <div id="demo2_tip">
-		        <b>SEO</b><br /><br />
-		        <img src="tooltips.gif" style="float:right;" />
-		        The tooltip content is an element on the page.
-		        So this approach of setting tooltip content is
-		        <b>Search Engine Friendly</b>.
+		    <div id="current_team_tooltip">
 		    </div>
 		</div>
 
@@ -31,14 +29,21 @@
 		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 		<script src="app.js"></script>
 
+		<script id="tooltip-template" type="text/x-handlebars-template">
+			<h3>{{country}}</h3>
+			<p>{{country}} is in {{group_letter}} group. With {{wins}} wins, {{draws}} draws, {{losses}} losses in {{games_played}} games played.</p>
+		</script>
 
+		<script id="tooltip-text-template" type="text/x-handlebars-template">
+			{{country}} is in {{group_letter}} group. With {{wins}} wins, {{draws}} draws, {{losses}} losses in {{games_played}} games played.
+		</script>
 
 		<script id="single-match" type="text/x-handlebars-template">
 			<div class="row">
 				{{#if isInProgress}}
 					<h4>{{minutesPlayed}}</h4>
 					<div class="progress progress-striped active">
-				      <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">
+				      <div class="progress-bar" role="progressbar" aria-valuenow="{{minutesPlayed}}" aria-valuemin="0" aria-valuemax="90">
 				        <span class="sr-only">{{minutesPlayed}}</span>
 				      </div>
 			    	</div>
@@ -50,16 +55,20 @@
 
 				{{#if isUpcoming}}
 					<h4>Starts at: {{formattedStartTime}}</h4>
+					<div class="progress progress-striped active">
+				      <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="90">
+				        <span class="sr-only">{{minutesPlayed}}</span>
+				      </div>
+			    	</div>
 				{{/if}}
 
-				<div class="col-md-5 team-area">
+				<div class="col-md-5 team-area" data-teamname="{{home_team.code}}">
 					<span class="team-name">{{home_team.country}}</span><img src="images/flags/{{home_team.code}}.png"><span class="goal">{{home_team.goals}}</span>
 				</div>
-				<div class="col-md-5 team-area">
+				<div class="col-md-5 team-area" data-teamname="{{away_team.code}}">
 					<span class="goal">{{away_team.goals}}</span><img src="images/flags/{{away_team.code}}.png"><span class="team-name">{{away_team.country}}</span>
 				</div>
 			</div>
 		</script>
 	</body>
-
 </html>

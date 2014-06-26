@@ -1,7 +1,10 @@
-
-.progress-bar{
+.progress-bar {
     margin-left: auto;
     margin-right: auto;
     height:40px;
     width:40px;
+}
+
+#info {
+	min-height: 100px;
 }

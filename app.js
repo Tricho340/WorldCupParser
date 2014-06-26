@@ -6,6 +6,11 @@ $(function() {
   var SECOND_HALF_DURATION = 45;
   var MINUTE_CHARACTER = '\'';
 
+
+  var matchesData = [];
+  var teamsData = [];
+
+
   function isItemInArray(item, arr) {
     return arr.some(function(currentValue) {
       return (currentValue === item);
@@ -55,8 +60,6 @@ $(function() {
   function getHtmlForMatch(matchData) {
     return getProcessedTemplateHtml('single-match', matchData);
   }
-
-  var matchesData = [];
 
   function renderMatchesByData(matchesData) {
     var matchesHtml = getMatchesTodayHtml(matchesData);
@@ -168,7 +171,6 @@ $(function() {
     matchData.minutesPlayed = getMinuteFromGame(matchData);
     matchData.isUpcoming = isUpcomingMatch(matchData);
     matchData.formattedStartTime = getFormattedMatchStart(matchData);
-    console.log(matchData);
     return matchData;
   }
 
@@ -179,7 +181,7 @@ $(function() {
   }
 
   function getFormattedTime(date) {
-    return getValueWithTwoDigits(date.getHours()) + ' ' + getValueWithTwoDigits(date.getMinutes());
+    return getValueWithTwoDigits(date.getHours()) + ':' + getValueWithTwoDigits(date.getMinutes());
   }
 
   function getValueWithTwoDigits(value) {
@@ -251,21 +253,48 @@ $(function() {
     return minutes;
   }
 
-  function getMoreInformation() {
+  function getTeamsData() {
     $.getJSON('http://worldcup.sfg.io/teams/results', function(result) {
-      resultsData = result;
-      console.log(resultsData);
+      teamsData = result;
+      console.log(teamsData);
     });
+  }
+
+  function getInfoForTeamByTeamId(teamId) {
+    console.log(teamsData);
+    var teamData = teamsData.filter(function(currentValue) {
+      return currentValue.fifa_code === teamId;
+    });
+    console.log(teamData);
+    return teamData[0];
+  }
+
+  function showTooltipWithData(data) {
+    var tooltipContentsHtml = getProcessedTemplateHtml('tooltip-template', data);
+    $('#info').html(tooltipContentsHtml);
+    $('#info').hide();
+    $('#info').fadeIn();
+  }
+
+  function getToolTipTextByTeamData(data) {
+    var tooltipText = getProcessedTemplateHtml('tooltip-text-template', data);
+    return tooltipText;
   }
 
   function initializeAppListeners() {
     $('#matchesTodayContainer').on('mouseover', '.team-area', function() {
-      console.log(this);
+      var teamId = $(this).data('teamname');
+      console.log("You hovered over: ", teamId);
+      var teamData = getInfoForTeamByTeamId(teamId);
+      console.log("Team data: ");
+      console.log(teamData);
+      showTooltipWithData(teamData);
     });
     $('#matchesTodayContainer').on('mouseout', '.team-area', function() {
-        console.log(this);
+
     });
   }
 
   getMatchesForTodayData();
+  getTeamsData();
 });
