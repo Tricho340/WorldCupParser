@@ -4,9 +4,25 @@
 		<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
 	</head>
 	<body>
-		<h1>Test heading</h1>
-		<script src="bower_components/handlebars/js"></script>
+		<h1>World Cup 2014 matches today</h1>
+
+		<div id="matchesTodayContainer" class="container">
+		</div>
+
 		<script src="bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="bower_components/handlebars/handlebars.js"></script>
 		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="app.js"></script>
+		<script id="single-match" type="text/x-handlebars-template">
+			<div class="row">
+				<div class="col-md-5 team-area">
+					<span class="team-name">{{home_team.country}}</span><img src="images/flags/{{home_team.code}}.png"><span class="goal">{{home_team.goals}}</span>
+				</div>
+				<div class="col-md-5 team-area">
+					<span class="goal">{{away_team.goals}}</span><img src="images/flags/{{away_team.code}}.png"><span class="team-name">{{away_team.country}}</span>
+				</div>
+			</div>
+		</script>
 	</body>
+
 </html>

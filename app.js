@@ -30,11 +30,11 @@ $(function() {
     return uniqueGroceryTypes;
   }
 
-  function getProcessedTemplateHtml(templateId, data) { // unfortunately this approach will not work @ Node environment, because jQuery needs a window to run and we are using jQuery to load the lo-dash templates from the HTML
+  function getProcessedTemplateHtml(templateId, data) {
     var templateHtml = $("#" + templateId).html();
-    var htmlWithValues = _.template(templateHtml, data); // very Lodash magic goes here. wow.
+    var templateFunction = Handlebars.compile(templateHtml);
 
-    return htmlWithValues;
+    return templateFunction(data);
   }
 
   function getTemplateHtml() {
@@ -47,22 +47,40 @@ $(function() {
     return templateHtml;
   }
 
-  function renderStudents() {
-    var studentsTemplateHtml = getTemplateHtml();
-    $('#studentsTableContainer').html(studentsTemplateHtml);
+  function getHtmlForMatch(matchData) {
+    return getProcessedTemplateHtml('single-match', matchData);
   }
 
   var matchesData = [];
-  function renderStudentsData(students) {
 
+  function renderMatchesByData(matchesData) {
+    var matchesHtml = getMatchesTodayHtml(matchesData);
+    $('#matchesTodayContainer').html(matchesHtml);
+  }
+
+  function getMatchesTodayHtml(matches) {
+    var matchesTodayHtml = "";
+    matches.forEach(function(currentMatchData) {
+      matchesTodayHtml += getHtmlForMatch(currentMatchData);
+    });
+
+    return matchesTodayHtml;
   }
 
   function getMatchesForTodayData() {
-    $.get('http://worldcup.sfg.io/matches/today', function(result) {
+    $.getJSON('http://worldcup.sfg.io/matches/today', function(result) {
       matchesData = result;
-      renderStudentsData(studentsData);
+      console.log(matchesData);
+      renderMatchesByData(matchesData);
     });
   }
 
-  getStudentsData();
+  function getMoreInformation() {
+    $.getJSON('http://worldcup.sfg.io/teams/results', function(result) {
+      resultsData = result;
+      console.log(resultsData);
+    });
+  }
+
+  getMatchesForTodayData();
 });
