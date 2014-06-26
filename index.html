@@ -2,6 +2,7 @@
 	<head>
 		<title>World Cup matches parser</title>
 		<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
+		<link type="text/css" rel="stylesheet" href="tooltip/themes/1/tooltip.css" />
 	</head>
 	<body>
 		<h1>World Cup 2014 matches today</h1>
@@ -15,10 +16,26 @@
 		<div id="matchesTodayContainer" class="container">
 		</div>
 
+		<span class="tooltip" onmouseover="tooltip.pop(this, '#demo2_tip')">
+		    Hover me
+		</span>
+		<div style="display:none;">
+		    <div id="demo2_tip">
+		        <b>SEO</b><br /><br />
+		        <img src="tooltips.gif" style="float:right;" />
+		        The tooltip content is an element on the page.
+		        So this approach of setting tooltip content is
+		        <b>Search Engine Friendly</b>.
+		    </div>
+		</div>
+		<script src="tooltip/themes/1/tooltip.js"</script>
 		<script src="bower_components/jquery/dist/jquery.min.js"></script>
 		<script src="bower_components/handlebars/handlebars.js"></script>
 		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 		<script src="app.js"></script>
+
+
+
 		<script id="single-match" type="text/x-handlebars-template">
 			<div class="row">
 				<div class="col-md-5 team-area">
