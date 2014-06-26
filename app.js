@@ -72,6 +72,7 @@ $(function() {
       matchesData = result;
       console.log(matchesData);
       renderMatchesByData(matchesData);
+      initializeAppListeners();
     });
   }
 
@@ -79,6 +80,15 @@ $(function() {
     $.getJSON('http://worldcup.sfg.io/teams/results', function(result) {
       resultsData = result;
       console.log(resultsData);
+    });
+  }
+
+  function initializeAppListeners() {
+    $('#matchesTodayContainer').on('mouseover', '.team-area', function() {
+      console.log(this);
+    });
+    $('#matchesTodayContainer').on('mouseout', '.team-area', function() {
+        console.log(this);
     });
   }
 
