@@ -45,6 +45,11 @@
 				{{#if isMatchFullTime}}
 					<h4>Full-time</h4>
 				{{/if}}
+
+				{{#if isUpcoming}}
+					<h4>Starts at: {{formattedStartTime}}</h4>
+				{{/if}}
+
 				<div class="col-md-5 team-area">
 					<span class="team-name">{{home_team.country}}</span><img src="images/flags/{{home_team.code}}.png"><span class="goal">{{home_team.goals}}</span>
 				</div>

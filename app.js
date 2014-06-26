@@ -144,8 +144,13 @@ $(function() {
   }
 
   function getMatchStartTime(matchData) {
-    var matchStartTime = new Date(matchData.datetime).getTime();
-    return matchStartTime;
+    var matchStartDate = getMatchStartDate(matchData);
+    return matchStartDate.getTime();
+  }
+
+  function getMatchStartDate(matchData) {
+    console.log(matchData.datetime);
+    return new Date(matchData.datetime);
   }
 
   function getTimePassedSinceMatchStart(matchData) {
@@ -161,8 +166,28 @@ $(function() {
     matchData.isMatchFullTime = isMatchFullTime(matchData);
     matchData.percentComplete = getMatchProgressInPercents(matchData);
     matchData.minutesPlayed = getMinuteFromGame(matchData);
+    matchData.isUpcoming = isUpcomingMatch(matchData);
+    matchData.formattedStartTime = getFormattedMatchStart(matchData);
     console.log(matchData);
     return matchData;
+  }
+
+  function getFormattedMatchStart(matchData) {
+    var unformattedMatchStartDate = getMatchStartDate(matchData);
+    var formattedMatchStartDate = getFormattedTime(unformattedMatchStartDate);
+    return formattedMatchStartDate;
+  }
+
+  function getFormattedTime(date) {
+    return getValueWithTwoDigits(date.getHours()) + ' ' + getValueWithTwoDigits(date.getMinutes());
+  }
+
+  function getValueWithTwoDigits(value) {
+    if (value < 10) {
+      return value + "0";
+    }
+
+    return value;
   }
 
   function getPlayingTime() {
@@ -184,6 +209,15 @@ $(function() {
     }
 
     return getMinutesFromMilliseconds(now - matchStart) + MINUTE_CHARACTER;
+  }
+
+  function isUpcomingMatch(matchData) {
+    var matchStartTime = getMatchStartTime(matchData);
+    var now = getNow();
+
+    console.log(matchStartTime, now);
+
+    return (now < matchStartTime);
   }
 
   function isGameInSecondHalf(matchData) {
