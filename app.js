@@ -1,6 +1,10 @@
 "use strict";
 
 $(function() {
+  var HALF_TIME_DURATION = 15;
+  var FIRST_HALF_DURATION = 45;
+  var SECOND_HALF_DURATION = 45;
+
   function isItemInArray(item, arr) {
     return arr.some(function(currentValue) {
       return (currentValue === item);
@@ -71,9 +75,101 @@ $(function() {
     $.getJSON('http://worldcup.sfg.io/matches/today', function(result) {
       matchesData = result;
       console.log(matchesData);
+      decorateMatchesDataWithHelperMethods(matchesData);
       renderMatchesByData(matchesData);
       initializeAppListeners();
     });
+  }
+
+  function decorateMatchesDataWithHelperMethods(matches) {
+    matches.forEach(function(currentMatchData) {
+      currentMatchData = decorateMatchDataWithHelperMethods(currentMatchData);
+    });
+  }
+
+  function hasMatchStarted(matchData) {
+    var now = getNow();
+    var matchStart = getMatchStartTime(matchData);
+    var isMatchBeforeCurrentMoment = (now > matchStart);
+    return isMatchBeforeCurrentMoment;
+  }
+
+  function getFirstHalfEnd(matchData) {
+    var matchStart = getMatchStartTime(matchData);
+    var firstHalfEnd = matchStart + getMillisecondsByMinutes(FIRST_HALF_DURATION);
+
+    return firstHalfEnd;
+  }
+
+  function getSecondHalfStart(matchData) {
+    var matchStart = getMatchStartTime(matchData);
+    var secondHalfStart = matchStart + getMillisecondsByMinutes(FIRST_HALF_DURATION) + getMillisecondsByMinutes(HALF_TIME_DURATION);
+    return secondHalfStart;
+  }
+
+  function getMillisecondsByMinutes(minutes) {
+    return minutes * 60 * 1000;
+  }
+
+  function isMatchInHalfTime(matchData) {
+    var timePassed = getTimePassedSinceMatchStart(matchData);
+    var firstHalfEnd = getFirstHalfEnd(matchData);
+    var secondHalfStart = getSecondHalfStart(matchData);
+    var isHalfTime = ((timePassed > firstHalfEnd) || (timePassed < secondHalfStart));
+
+    return isHalfTime;
+  }
+
+  function isMatchFullTime() {
+    var timePassed = getTimePassedSinceMatchStart(matchData);
+    var matchE
+    var firstHalfEnd = getFirstHalfEnd(matchData);
+    var secondHalfStart = getSecondHalfStart(matchData);
+    var isHalfTime = ((timePassed > firstHalfEnd) || (timePassed < secondHalfStart));
+
+    return isHalfTime;
+  }
+
+  function getNow() {
+    return new Date().getTime();
+  }
+
+  function getMatchEndTime(matchData) {
+    var matchStartTime = getMatchStartTime(matchData);
+    var matchEndTime = matchStartTime + HALF_TIME_DURATION + FIRST_HALF_DURATION + SECOND_HALF_DURATION;
+    return matchEndTime;
+  }
+
+  function getMatchStartTime(matchData) {
+    var matchStartTime = new Date(matchData.datetime).getTime();
+    return matchStartTime;
+  }
+
+  function getTimePassedSinceMatchStart(matchData) {
+    var now = getNow();
+    var matchStartTime = getMatchStartTime(matchData);
+    var timePassed = now - matchStartTime;
+    return timePassed;
+  }
+
+  function isMatchOver(matchData) {
+
+  }
+
+  function decorateMatchDataWithHelperMethods(matchData) {
+    matchData.isStarted = hasMatchStarted(matchData);
+    matchData.isMatchInHalfTime =
+
+    matchData.percentComplete = hasMatchStarted()
+    return matchData;
+  }
+
+  function getMatchProgress(matchData) {
+    var matchMinute = matchData
+  }
+
+  function getMinutesSinceMatchStart(matchData) {
+    mat
   }
 
   function getMoreInformation() {
