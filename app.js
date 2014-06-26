@@ -4,6 +4,7 @@ $(function() {
   var HALF_TIME_DURATION = 15;
   var FIRST_HALF_DURATION = 45;
   var SECOND_HALF_DURATION = 45;
+  var MINUTE_CHARACTER = '\'';
 
   function isItemInArray(item, arr) {
     return arr.some(function(currentValue) {
@@ -87,10 +88,11 @@ $(function() {
     });
   }
 
-  function hasMatchStarted(matchData) {
+  function isMatchInProgress(matchData) {
     var now = getNow();
     var matchStart = getMatchStartTime(matchData);
-    var isMatchBeforeCurrentMoment = (now > matchStart);
+    var matchEnd = getMatchEndTime(matchData);
+    var isMatchBeforeCurrentMoment = (now > matchStart && now < matchEnd);
     return isMatchBeforeCurrentMoment;
   }
 
@@ -120,14 +122,15 @@ $(function() {
     return isHalfTime;
   }
 
-  function isMatchFullTime() {
-    var timePassed = getTimePassedSinceMatchStart(matchData);
-    var matchE
-    var firstHalfEnd = getFirstHalfEnd(matchData);
-    var secondHalfStart = getSecondHalfStart(matchData);
-    var isHalfTime = ((timePassed > firstHalfEnd) || (timePassed < secondHalfStart));
+  function getMatchDuration() {
+    return FIRST_HALF_DURATION + HALF_TIME_DURATION + SECOND_HALF_DURATION;
+  }
 
-    return isHalfTime;
+  function isMatchFullTime(matchData) {
+    var now = getNow();
+    var matchEndTime = getMatchEndTime(matchData);
+
+    return (now > matchEndTime);
   }
 
   function getNow() {
@@ -152,24 +155,66 @@ $(function() {
     return timePassed;
   }
 
-  function isMatchOver(matchData) {
-
-  }
-
   function decorateMatchDataWithHelperMethods(matchData) {
-    matchData.isStarted = hasMatchStarted(matchData);
-    matchData.isMatchInHalfTime =
-
-    matchData.percentComplete = hasMatchStarted()
+    matchData.isInProgress = isMatchInProgress(matchData);
+    matchData.isMatchInHalfTime = isMatchInHalfTime(matchData);
+    matchData.isMatchFullTime = isMatchFullTime(matchData);
+    matchData.percentComplete = getMatchProgressInPercents(matchData);
+    matchData.minutesPlayed = getMinuteFromGame(matchData);
+    console.log(matchData);
     return matchData;
   }
 
-  function getMatchProgress(matchData) {
-    var matchMinute = matchData
+  function getPlayingTime() {
+    return (FIRST_HALF_DURATION + SECOND_HALF_DURATION);
+  }
+
+  function getMinuteFromGame(matchData) {
+    var now = getNow();
+    var matchStart = getMatchStartTime(matchData);
+    if (isMatchInHalfTime(matchData)) {
+      return '45\'';
+    }
+    if (isMatchFullTime(matchData)) {
+      return 'FT';
+    }
+    var secondHalfStart = getSecondHalfStart(matchData);
+    if (isGameInSecondHalf(matchData)) {
+      return getMinutesFromMilliseconds(now - secondHalfStart) + FIRST_HALF_DURATION + MINUTE_CHARACTER;
+    }
+
+    return getMinutesFromMilliseconds(now - matchStart) + MINUTE_CHARACTER;
+  }
+
+  function isGameInSecondHalf(matchData) {
+    var secondHalfStart = getSecondHalfStart(matchData);
+    var now = getNow();
+    var gameEndTime = getMatchEndTime(matchData);
+    return (now > secondHalfStart && now < gameEndTime);
+  }
+
+  function getMatchProgressInPercents(matchData) {
+    var minutesPassed = getMinutesSinceMatchStart(matchData);
+    var matchDuration = getMatchDuration();
+    if (isMatchInHalfTime(matchData)) { // when the match is at half-time we should be at 50 percent
+      return 50;
+    }
+
+    return parseInt((minutesPassed / getPlayingTime()) * 100, 100);
   }
 
   function getMinutesSinceMatchStart(matchData) {
-    mat
+    var matchStart = getMatchStartTime(matchData);
+    var now = getNow();
+    var timePassed = now - matchStart;
+    var minutesPassed = getMinutesFromMilliseconds(timePassed);
+    return minutesPassed;
+  }
+
+  function getMinutesFromMilliseconds(milliseconds) {
+    var seconds = (milliseconds / 1000);
+    var minutes = Math.round(seconds / 60);
+    return minutes;
   }
 
   function getMoreInformation() {

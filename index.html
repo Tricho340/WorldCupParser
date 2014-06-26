@@ -16,12 +16,17 @@
 		<script src="app.js"></script>
 		<script id="single-match" type="text/x-handlebars-template">
 			<div class="row">
-				{{#if isStarted}}		
+				{{#if isInProgress}}
+					<h4>{{minutesPlayed}}</h4>
 					<div class="progress progress-striped active">
 				      <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">
-				        <span class="sr-only">45% Complete</span>
+				        <span class="sr-only">{{minutesPlayed}}</span>
 				      </div>
 			    	</div>
+				{{/if}}
+
+				{{#if isMatchFullTime}}
+					<h4>Full-time</h4>
 				{{/if}}
 				<div class="col-md-5 team-area">
 					<span class="team-name">{{home_team.country}}</span><img src="images/flags/{{home_team.code}}.png"><span class="goal">{{home_team.goals}}</span>
